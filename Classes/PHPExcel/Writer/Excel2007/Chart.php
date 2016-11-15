@@ -100,6 +100,13 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 
         $objWriter->endElement();
 
+        $objWriter->startElement('c:spPr');
+        $objWriter->startElement('a:ln');
+        $objWriter->startElement('a:noFill');
+        $objWriter->endElement();
+        $objWriter->endElement();
+        $objWriter->endElement();
+
         $this->writePrintSettings($objWriter);
 
         $objWriter->endElement();
@@ -1080,7 +1087,10 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
             }
         }
 
+        $ci = -1;
         foreach ($plotSeriesOrder as $plotSeriesIdx => $plotSeriesRef) {
+            $ci++;
+
             $objWriter->startElement('c:ser');
 
             $objWriter->startElement('c:idx');
@@ -1091,8 +1101,30 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
             $objWriter->writeAttribute('val', $this->_seriesIndex + $plotSeriesRef);
             $objWriter->endElement();
 
+            //    Labels
+            $plotSeriesLabel = $plotGroup->getPlotLabelByIndex($plotSeriesRef);
+            if ($plotSeriesLabel && ($plotSeriesLabel->getPointCount() > 0)) {
+                $objWriter->startElement('c:tx');
+                $objWriter->startElement('c:strRef');
+                $this->writePlotSeriesLabel($plotSeriesLabel, $objWriter);
+                $objWriter->endElement();
+                $objWriter->endElement();
+            }
+
+            // write color
+            if (PHPExcel_Chart_DataSeries::getColorNDX($ci)) {
+                $objWriter->startElement('c:spPr');
+                $objWriter->startElement('a:solidFill');
+                $objWriter->startElement('a:srgbClr');
+                $objWriter->writeAttribute('val', PHPExcel_Chart_DataSeries::getColorNDX($ci));
+                $objWriter->endElement();
+                $objWriter->endElement();
+                $objWriter->endElement();
+            }
+
             if (($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART) || ($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D) || ($groupType == PHPExcel_Chart_DataSeries::TYPE_DONUTCHART)) {
                 $objWriter->startElement('c:dPt');
+
                 $objWriter->startElement('c:idx');
                 $objWriter->writeAttribute('val', 3);
                 $objWriter->endElement();
@@ -1108,16 +1140,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
                 $objWriter->endElement();
                 $objWriter->endElement();
                 $objWriter->endElement();
-                $objWriter->endElement();
-            }
 
-            //    Labels
-            $plotSeriesLabel = $plotGroup->getPlotLabelByIndex($plotSeriesRef);
-            if ($plotSeriesLabel && ($plotSeriesLabel->getPointCount() > 0)) {
-                $objWriter->startElement('c:tx');
-                $objWriter->startElement('c:strRef');
-                $this->writePlotSeriesLabel($plotSeriesLabel, $objWriter);
-                $objWriter->endElement();
                 $objWriter->endElement();
             }
 
@@ -1130,6 +1153,16 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
                     $objWriter->startElement('a:noFill');
                     $objWriter->endElement();
                 }
+
+                // write color
+                if (PHPExcel_Chart_DataSeries::getColorNDX($ci)) {
+                    $objWriter->startElement('a:solidFill');
+                    $objWriter->startElement('a:srgbClr');
+                    $objWriter->writeAttribute('val', PHPExcel_Chart_DataSeries::getColorNDX($ci));
+                    $objWriter->endElement();
+                    $objWriter->endElement();
+                }
+
                 $objWriter->endElement();
                 $objWriter->endElement();
             }

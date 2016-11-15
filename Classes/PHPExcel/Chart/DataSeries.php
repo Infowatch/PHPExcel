@@ -133,6 +133,27 @@ class PHPExcel_Chart_DataSeries
      */
     private $plotValues = array();
 
+    /** @var array $colorNDX color scheme for chart */
+    static private $colorNDX = array();
+
+    /**
+     * @param $index
+     *
+     * @return array
+     */
+    public static function getColorNDX($index)
+    {
+        return isset(self::$colorNDX[$index]) ? self::$colorNDX[$index] : null;
+    }
+
+    /**
+     * @param array $colorNDX
+     */
+    public static function setColorNDX($colorNDX)
+    {
+        self::$colorNDX = $colorNDX;
+    }
+
     /**
      * Create a new PHPExcel_Chart_DataSeries
      */
