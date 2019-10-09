@@ -215,27 +215,6 @@ class PHPExcel_Shared_JAMA_Matrix
                     }
                     return $R;
                     break;
-                //$R = array of row indices; $C = array of column indices
-                case 'array,array':
-                    list($RL, $CL) = $args;
-                    if (count($RL) > 0) {
-                        $m = count($RL);
-                    } else {
-                        throw new PHPExcel_Calculation_Exception(self::ARGUMENT_BOUNDS_EXCEPTION);
-                    }
-                    if (count($CL) > 0) {
-                        $n = count($CL);
-                    } else {
-                        throw new PHPExcel_Calculation_Exception(self::ARGUMENT_BOUNDS_EXCEPTION);
-                    }
-                    $R = new PHPExcel_Shared_JAMA_Matrix($m, $n);
-                    for ($i = 0; $i < $m; ++$i) {
-                        for ($j = 0; $j < $n; ++$j) {
-                            $R->set($i - $i0, $j - $j0, $this->A[$RL[$i]][$CL[$j]]);
-                        }
-                    }
-                    return $R;
-                    break;
                 //$RL = array of row indices; $CL = array of column indices
                 case 'array,array':
                     list($RL, $CL) = $args;
