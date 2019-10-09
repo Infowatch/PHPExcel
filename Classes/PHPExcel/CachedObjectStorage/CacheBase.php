@@ -314,7 +314,6 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
      */
     public function copyCellCollection(PHPExcel_Worksheet $parent)
     {
-        $this->currentCellIsDirty;
         $this->storeData();
 
         $this->parent = $parent;

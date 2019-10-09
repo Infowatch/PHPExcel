@@ -257,7 +257,6 @@ class PHPExcel_CachedObjectStorage_SQLite3 extends PHPExcel_CachedObjectStorage_
      */
     public function copyCellCollection(PHPExcel_Worksheet $parent)
     {
-        $this->currentCellIsDirty;
         $this->storeData();
 
         //    Get a new id for the new table name
